@@ -1,0 +1,227 @@
+#pragma once
+#include<iostream>
+#include<stdlib.h>
+#include<stdio.h>
+/*VS编译器环境*/
+struct List
+{
+	int data;//数据域
+	List *pnext;//指针域
+};
+
+List Inits_List(List *);//构建线性表
+void Destroy_List(List *);//销毁线性表
+void Clear_List(List &);//清空表
+int List_length(List &);//统计表的长度
+void GetElem(List &, int, int &);//返回表中第i个元素的值
+void LocateElem(List &, int);//按值查找
+void PriorElem(List &, int, List *&);//返回元素的前驱
+void NextElem(List &, int, List *&);//返回元素的后继
+void List_Insert(List &, int, int);//在指定元素之后/之前插入元素、
+List List_delete(List &, int);//删除第i个元素
+void Traverse_List(List &);//遍历整个线性表
+void selection_sort_descending_order(List &);//选择排序(降序）
+void selection_sort_ascending_order(List &);//选择排序（升序)
+List Inits_List(List *L)
+{
+	//L = (List)malloc(sizeof(List));
+	//L = (List)malloc(sizeof(List));
+	L = new List;
+	return *L;
+}
+
+void Destroy_List(List  *L)
+{
+	printf("销毁线性表");
+	//printf("%p\n", L);
+	//free(L);C风格
+	delete L;//释放链表 C++风格
+	printf("成功\n");
+}
+
+void Clear_List(List &L)//引用类型
+{
+	List *temp;
+	temp = &L;
+	while (temp)
+	{
+		L.data = 0;//数据域清空
+		temp = temp->pnext;//指针移动
+	}
+}
+
+int List_length(List &L)
+{
+	List *temp;
+	temp = &L;
+	int count = 0;
+	while (temp)
+	{
+		count++;
+		temp = temp->pnext;//指针移动
+	}
+	return count;
+}
+
+void GetElem(List &L, int i, int & temp)//将第i个元素放置到临时引用变量temp中
+{
+	List *ptemp = &L;//初始化临时指针
+	for (int count = 0; count < i; count++)//计数器
+	{
+
+		if (count == i - 1)//判断条件是关键,ptemp引用的是第一个节点，不是头结点
+		{
+			temp = ptemp->data;//引用变量temp赋值
+		}
+		ptemp = ptemp->pnext;//指针移动
+	}
+}
+
+void LocateElem(List & L, int number)
+{
+	List *ptemp = &L;//初始化临时指针
+	for (; ptemp;)//计数器
+	{
+
+		if (ptemp->data == number)
+		{
+			printf("find the  number of %d.\n", number);
+		}
+		else
+		{
+			printf("Not find the data number of %d.\n", number);
+		}
+		ptemp = ptemp->pnext;//指针移动
+	}
+}
+
+void PriorElem(List & L, int i, List  *&ttp)
+//ttp是指针引用类型,返回的是List类型的结点指针
+{
+	//返回指定元素的前驱
+	List *ptemp = &L;//初始化临时指针
+	for (int count = 0; count < i; count++)//计数器
+	{
+		if (count == i - 2)
+		{
+			ttp = ptemp->pnext;//返回指定结点的前驱
+		}
+		ptemp = ptemp->pnext;//指针移动
+	}
+}
+
+void NextElem(List & L, int i, List *& ttp)
+{
+	List *ptemp = &L;//初始化临时指针
+	for (int count = 0; count < i; count++)//计数器
+	{
+
+		if (count == i)
+		{
+			ptemp->data = 66;
+			ttp = ptemp->pnext;//返回指定结点的后继
+		}
+		ptemp = ptemp->pnext;//指针移动
+	}
+}
+void List_Insert(List &L, int i, int Inst_number)
+{
+	List *ppm = &L;
+	List *Instreat_number = new List;
+	Instreat_number->data = Inst_number;//初始化指针域
+	if (i == 0)//头插
+	{
+		Instreat_number->pnext = ppm->pnext;
+		ppm->pnext = Instreat_number;
+	}
+	else
+	{
+		for (int count = 0; count < i&&ppm; count++)//计数器
+		{
+
+			if (count == i - 1)//指定位置插入元素
+			{
+				Instreat_number->pnext = ppm->pnext;
+				ppm->pnext = Instreat_number;
+			}
+			ppm = ppm->pnext;//指针移动
+		}
+	}
+	//printf("%d\n", Instreat_number->data);
+}
+
+List List_delete(List &L, int i)//删除第i个元素
+{
+	List *ppm = &L;
+	printf("%p\n", ppm->pnext);
+	List *temp_of_next = new List;
+	List *temp = new List;
+
+	if (i == 0)
+	{
+		printf("删除结点位置不合适\n");
+		return *ppm;
+	}
+	else
+	{
+		for (int count = 0; count < i; count++)
+		{
+			if (count == i)
+			{
+				temp_of_next = ppm->pnext->pnext;//接收要删除结点的下一个结点的地址
+				temp = ppm->pnext;//接收要删除的结点的地址
+				ppm->pnext = temp_of_next;//将要删除的前一个结点的指针域设置为要删除结点的下一个结点
+			}
+			else
+				ppm = ppm->pnext;
+		}
+	}
+	delete temp;//释放结点temp
+				//delete temp_of_next;
+	ppm = &L;
+	return *ppm;
+}
+
+void Traverse_List(List &L)
+{
+	List *ppx = &L;
+	for (ppx; ppx; ppx = ppx->pnext)
+	{
+		printf("%d\n", ppx->data);//遍历输出
+	}
+}
+void selection_sort_descending_order(List &L)//选择排序(降序)
+{
+	List *temp;
+	List *max_data = &L;
+	int  temp_of_data;
+	while (temp)
+	{
+		if (max_data->data <= temp->data)
+		{
+			temp_of_data = max_data->data;
+			max_data->data = temp->data;
+			temp->data = temp_of_data;
+		}
+		temp = temp->pnext;
+	}
+	delete temp, max_data;
+}
+
+void selection_sort_ascending_order(List &L)//选择排序（升序）
+{
+	List *temp;
+	List *min_data = &L;
+	int  temp_of_data;
+	while (temp)
+	{
+		if (min_data->data >= temp->data)
+		{
+			temp_of_data = min_data->data;
+			min_data->data = temp->data;
+			temp->data = temp_of_data;
+		}
+		temp = temp->pnext;
+	}
+	delete temp, min_data;
+}
